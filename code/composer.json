@@ -1,0 +1,31 @@
+{
+    "name": "afrikpay/rsa-encrypt",
+    "description": "encrypt and decript data using the rsa algorithm",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Afrikpay\\RsaEncrypt\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "samsam237",
+            "email": "sbissog@gmail.com"
+        }
+    ],
+    "config": {
+        "process-timeout": 12000
+    },
+    "require": {
+        "phpseclib/phpseclib": "^3.0",
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.7",
+        "slim/twig-view": "^3.4",
+        "paragonie/constant_time_encoding": "^3.0"
+    },
+    "scripts": {
+        "start": "php -S localhost:8000 -t routes",
+        "test": "phpunit"
+    }
+}

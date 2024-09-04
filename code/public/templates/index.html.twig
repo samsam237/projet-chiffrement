@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0; padding: 0; text-decoration: none; font-size: 12px;
+        }
+       .container {
+        display: flex; flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        height: 100vh;
+        background-color: #f2f2f2; 
+       }
+       .container-element {
+        height: 500px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+       }
+       .container-element-growth-1 {
+            width: 100px;
+            animation: grow 1s ease-in-out;
+        }
+        .container-element-growth-2{
+            width: 400px;
+            animation: grow 1s ease-in-out;
+        }
+
+        #input-element, #output-element{
+            background-color: white;
+            width: 90%; height: 90%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 1s;    
+            overflow: auto;
+        }
+
+        .btn-action{
+            padding: 5px 10px; 
+            margin-top: 15px; margin-bottom: 15px;
+            border: black 3px solid; border-radius: 25px;
+            cursor: pointer;
+        }
+        .btn-action:hover{
+            font-size: 12px; font-weight: bold;
+        }
+        
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="container-element container-element-growth-2">
+            <textarea type="text" id="input-element" placeholder="Text"> </textarea>
+        </div>
+        <div class="container-element container-element-growth-1">
+            <div class="button-section">
+                <div class="btn-action" id="encoder-btn">Encoder</div>
+                <div class="btn-action" id="decoder-btn">Decoder</div>
+            </div>
+        </div>
+        <div class="container-element container-element-growth-2">
+            <div id="output-element">
+                
+            </div>
+        </div>
+    </div>
+    
+    <script>        
+        async function encryptMessage(message) {
+            try {
+                const response = await fetch('http://localhost:8000/encrypt', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ "message": message })
+                });
+        
+                const data = await response.json();
+                                
+                return data.message;
+            } catch (error) {
+                console.error('Error during ecryption fetch:', error.message);
+            }
+        }
+        
+        async function decryptMessage(encryptedMessage) {
+            try {
+                const response = await fetch('http://localhost:8000/decrypt', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ "message": encryptedMessage })
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+        
+                const data = await response.json();
+                console.log (data)
+                return data.message;
+            } catch (error) {
+                console.error('Error during decryption fetch:', error);
+            }
+        }
+                
+        document.getElementById('encoder-btn').addEventListener('click', async () => {
+            var inputElement = document.getElementById('input-element');
+            var outputElement = document.getElementById('output-element');
+
+            inputElement.value = inputElement.value.trim();
+
+            const res = await encryptMessage(inputElement.innerText);
+            outputElement.innerText = (res=="") ? res : `Une erreur inattendue`;
+        })
+        document.getElementById('decoder-btn').addEventListener('click', async () => {
+            var inputElement = document.getElementById('input-element');
+            var outputElement = document.getElementById('output-element');
+
+            inputElement.value = inputElement.value.trim()
+
+            const res = await decryptMessage(inputElement.value.trim());
+            outputElement.innerText = (res=="") ? res : `Une erreur inattendue`;
+        })
+    </script>
+
+</body>
+</html>

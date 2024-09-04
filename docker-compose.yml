@@ -1,0 +1,22 @@
+version: '3'
+services:
+    web:
+        image: nginx:1.25.2-alpine3.18
+        ports:
+            - "8888:80"
+        volumes:
+            - ./conf.d:/etc/nginx/conf.d
+            - ./code:/app
+        depends_on:
+            - php
+        restart: always
+    php:
+        build:
+            context: .
+            dockerfile: PHP.Dockerfile
+        volumes:
+            - ./code:/app:samsam
+        restart: always
+volumes:
+   slimphp: {}
+        
